@@ -23,6 +23,17 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		
+		<!-- Sonar properties -->
+		<sonar.language>java</sonar.language>
+		<sonar.projectName>${project.name}</sonar.projectName>
+		<sonar.java.source>8</sonar.java.source>
+		<sonar.java.binaries>${project.basedir}/target/classes/</sonar.java.binaries>
+		<sonar.java.binaries>${project.basedir}/target/test-classes/</sonar.java.binaries>
+		<sonar.sources>${project.basedir}/src/main/</sonar.sources>
+		<sonar.surefire.reportsPath>${project.testresult.directory}/surefire-reports</sonar.surefire.reportsPath>
+		<sonar.exclusions>**/fr/est/rescue/server/ideows/wsdl/**</sonar.exclusions>
+		<sonar.tests>${project.basedir}/src/test/</sonar.tests>
 	</properties>
 
 	<dependencies>
