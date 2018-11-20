@@ -1,0 +1,8 @@
+﻿version: '3.5'
+services:
+  spring-boot-fac:
+     image: fac/spring-boot-fac:latest
+     #le nom du container est important il sera utilisé pour s'y connecter (depuis notre appli main)
+     container_name: spring-boot-fac
+     ports:
+        - 8099:8080     

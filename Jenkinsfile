@@ -56,6 +56,6 @@ node {
 	stage('start docker'){			
 	    sh "docker stop spring-boot-fac"
 	    sh "docker rm spring-boot-fac"
-	    sh "docker run -d -name spring-boot-fac -p 8099:8080 fac/spring-boot-fac:latest"
+	    sh "docker run -d --name spring-boot-fac -p 8099:8080 fac/spring-boot-fac:latest"
 	}
 }
