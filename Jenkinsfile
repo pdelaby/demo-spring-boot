@@ -53,14 +53,14 @@ node {
 	
 	def dockerImage
     stage('build docker') {
-            sh "cp -R src/main/docker target/"
+            sh "git clone https://github.com/pdelaby/docker-for-spring-boot.git target/docker"
             sh "cp target/*.jar target/docker/"
             dockerImage = docker.build("fac/${imageName}:latest", 'target/docker')       
     }
 
 	
 	stage('stop docker'){	
-		def imageWC = sh(script: "docker ps -q --filter \"name=${imageName}\" | wc -l', returnStdout: true).trim()
+		def imageWC = sh(script: "docker ps -q --filter \"name=${imageName}\" | wc -l", returnStdout: true).trim()
 
 		if ( imageWC == "1" ){
 			sh "docker stop ${imageName}"
