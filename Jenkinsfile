@@ -9,7 +9,7 @@ node {
 
 	def imageName = "spring-boot-fac"
     stage('checkout') {
-		git branch: 'feature/docker', url: 'https://github.com/pdelaby/demo-spring-boot.git'
+		git branch: 'master', url: 'https://github.com/pdelaby/demo-spring-boot.git'
     }
 	 
 	//stage('checkout'){
@@ -59,8 +59,8 @@ node {
     }
 
 	
-	stage('stop docker'){	
-		def imageWC = sh(script: "docker ps -q --filter \"name=${imageName}\" | wc -l", returnStdout: true).trim()
+	stage('stop et rm docker'){	
+		def imageWC = sh(script: "docker ps -a -q --filter \"name=${imageName}\" | wc -l", returnStdout: true).trim()
 
 		if ( imageWC == "1" ){
 			sh "docker stop ${imageName}"
@@ -71,6 +71,6 @@ node {
 	    
 	}
 	stage('start docker'){			
-	    sh "docker run -d --name ${imageName} -p 8099:8080 fac/${imageName}:latest"
+	    sh "docker run -d --name ${imageName} -p 8051:8080 fac/${imageName}:latest"
 	}
 }
