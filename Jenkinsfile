@@ -1,14 +1,20 @@
 #!/usr/bin/env groovy
 
 
+// Ne garder que 5 builds et 5 artefacts
+properties([buildDiscarder(logRotator( artifactNumToKeepStr: '5', numToKeepStr: '5'))])
+
+
 node {
-    //stage('checkout') {
-	//	git branch: 'master', url: 'https://github.com/pdelaby/demo-spring-boot.git'
-    //}
+
+	def imageName = "spring-boot-fac"
+    stage('checkout') {
+		git branch: 'feature/docker', url: 'https://github.com/pdelaby/demo-spring-boot.git'
+    }
 	 
-	stage('checkout'){
-		checkout scm
-	}
+	//stage('checkout'){
+	//	checkout scm
+	//}
 
 	// si jenkins est dans un docker, il faut rajouter -u root
     docker.image('openjdk:8').inside('-e MAVEN_OPTS="-Duser.home=./"') {
@@ -49,13 +55,22 @@ node {
     stage('build docker') {
             sh "cp -R src/main/docker target/"
             sh "cp target/*.jar target/docker/"
-            dockerImage = docker.build("fac/spring-boot-fac:latest", 'target/docker')
-        
+            dockerImage = docker.build("fac/${imageName}:latest", 'target/docker')       
     }
-		
+
+	
+	stage('stop docker'){	
+		def imageWC = sh(script: "docker ps -q --filter \"name=${imageName}\" | wc -l', returnStdout: true).trim()
+
+		if ( imageWC == "1" ){
+			sh "docker stop ${imageName}"
+			sh "docker rm ${imageName}"
+		}else{
+			println 'Image non demarree'
+		}
+	    
+	}
 	stage('start docker'){			
-	    sh "docker stop spring-boot-fac"
-	    sh "docker rm spring-boot-fac"
-	    sh "docker run -d --name spring-boot-fac -p 8099:8080 fac/spring-boot-fac:latest"
+	    sh "docker run -d --name ${imageName} -p 8099:8080 fac/${imageName}:latest"
 	}
 }
